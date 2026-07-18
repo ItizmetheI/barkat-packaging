@@ -24,6 +24,7 @@ const dummy = new THREE.Object3D()
 // performance budget (Section 5) - never individual meshes in a loop.
 export default function Chapter8_Dock({ progressRef }) {
   const meshRef = useRef(null)
+  const palletMaterialRef = useRef(null)
   const { camera } = useThree()
 
   const positions = useMemo(() => {
@@ -54,6 +55,10 @@ export default function Chapter8_Dock({ progressRef }) {
       camera.lookAt(...LOOK_AT)
     }
 
+    if (palletMaterialRef.current) {
+      palletMaterialRef.current.opacity = THREE.MathUtils.clamp(local / 0.15, 0, 1)
+    }
+
     if (meshRef.current) {
       positions.forEach((pos, i) => {
         const threshold = i / COUNT
@@ -71,7 +76,7 @@ export default function Chapter8_Dock({ progressRef }) {
     <group>
       <mesh position={[0, 0, 0]}>
         <boxGeometry args={[6, 0.2, 4]} />
-        <meshStandardMaterial color={PALLET_COLOR} />
+        <meshStandardMaterial ref={palletMaterialRef} color={PALLET_COLOR} transparent opacity={0} />
       </mesh>
       <instancedMesh ref={meshRef} args={[null, null, COUNT]}>
         <boxGeometry args={[BOX_SIZE, BOX_SIZE, BOX_SIZE]} />
