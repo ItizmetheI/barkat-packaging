@@ -18,7 +18,8 @@ export default function Chapter7_Spec({ progressRef }) {
     const global = progressRef.current
     const local = THREE.MathUtils.clamp((global - CHAPTER_START) / (CHAPTER_END - CHAPTER_START), 0, 1)
 
-    if (global >= CHAPTER_START) {
+    // Explicit handoff: only write the camera within this chapter's own range.
+    if (global >= CHAPTER_START && global < CHAPTER_END) {
       camera.position.set(
         THREE.MathUtils.lerp(CAMERA_START[0], CAMERA_END[0], local),
         THREE.MathUtils.lerp(CAMERA_START[1], CAMERA_END[1], local),

@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
+import useChapterOpacity from '../hooks/useChapterOpacity'
 
 const CHAPTER_START = 0.25
 const CHAPTER_END = 0.38
@@ -21,12 +22,14 @@ export default function Chapter3_Laminate({ progressRef }) {
   const topLinerRef = useRef(null)
   const bottomLinerRef = useRef(null)
   const { camera } = useThree()
+  const getOpacity = useChapterOpacity(progressRef, CHAPTER_START, CHAPTER_END)
 
   useFrame(() => {
     const global = progressRef.current
     const local = THREE.MathUtils.clamp((global - CHAPTER_START) / (CHAPTER_END - CHAPTER_START), 0, 1)
 
-    if (global >= CHAPTER_START) {
+    // Explicit handoff: only write the camera within this chapter's own range.
+    if (global >= CHAPTER_START && global < CHAPTER_END) {
       camera.position.set(
         THREE.MathUtils.lerp(CAMERA_START[0], CAMERA_END[0], local),
         THREE.MathUtils.lerp(CAMERA_START[1], CAMERA_END[1], local),
@@ -35,14 +38,15 @@ export default function Chapter3_Laminate({ progressRef }) {
       camera.lookAt(...LOOK_AT)
     }
 
+    const opacity = getOpacity()
     const z = THREE.MathUtils.lerp(LINER_UNBONDED_Z, LINER_BONDED_Z, local)
     if (topLinerRef.current) {
       topLinerRef.current.position.z = z
-      topLinerRef.current.material.opacity = local
+      topLinerRef.current.material.opacity = opacity
     }
     if (bottomLinerRef.current) {
       bottomLinerRef.current.position.z = -z
-      bottomLinerRef.current.material.opacity = local
+      bottomLinerRef.current.material.opacity = opacity
     }
   })
 

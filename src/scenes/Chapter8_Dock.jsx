@@ -1,9 +1,14 @@
 import { useRef, useMemo } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
+import useChapterOpacity from '../hooks/useChapterOpacity'
 
 const CHAPTER_START = 0.85
 const CHAPTER_END = 0.93
+// Ch.9 (Word) and Ch.10 (Contact) are DOM-only overlays that dim/blur whatever 3D content
+// is behind them - they don't bring their own geometry. So this is the site's final 3D
+// image; it holds visible through the end of scroll instead of fading out mid-story.
+const VISIBLE_END = 1.0
 const CAMERA_START = [0, 1, 3.5]
 const CAMERA_END = [7, 5, 15]
 const LOOK_AT = [0, 1.5, 0]
@@ -26,6 +31,7 @@ export default function Chapter8_Dock({ progressRef }) {
   const meshRef = useRef(null)
   const palletMaterialRef = useRef(null)
   const { camera } = useThree()
+  const getOpacity = useChapterOpacity(progressRef, CHAPTER_START, VISIBLE_END)
 
   const positions = useMemo(() => {
     const step = BOX_SIZE + GAP
@@ -46,7 +52,8 @@ export default function Chapter8_Dock({ progressRef }) {
     const global = progressRef.current
     const local = THREE.MathUtils.clamp((global - CHAPTER_START) / (CHAPTER_END - CHAPTER_START), 0, 1)
 
-    if (global >= CHAPTER_START) {
+    // Explicit handoff: only write the camera within this chapter's own range.
+    if (global >= CHAPTER_START && global < CHAPTER_END) {
       camera.position.set(
         THREE.MathUtils.lerp(CAMERA_START[0], CAMERA_END[0], local),
         THREE.MathUtils.lerp(CAMERA_START[1], CAMERA_END[1], local),
@@ -55,16 +62,18 @@ export default function Chapter8_Dock({ progressRef }) {
       camera.lookAt(...LOOK_AT)
     }
 
+    const opacity = getOpacity()
+
     if (palletMaterialRef.current) {
-      palletMaterialRef.current.opacity = THREE.MathUtils.clamp(local / 0.15, 0, 1)
+      palletMaterialRef.current.opacity = Math.min(THREE.MathUtils.clamp(local / 0.15, 0, 1), opacity)
     }
 
     if (meshRef.current) {
       positions.forEach((pos, i) => {
         const threshold = i / COUNT
-        const scale = THREE.MathUtils.clamp((local - threshold) / 0.15, 0, 1)
+        const reveal = THREE.MathUtils.clamp((local - threshold) / 0.15, 0, 1)
         dummy.position.set(pos[0], pos[1], pos[2])
-        dummy.scale.setScalar(scale)
+        dummy.scale.setScalar(Math.min(reveal, opacity))
         dummy.updateMatrix()
         meshRef.current.setMatrixAt(i, dummy.matrix)
       })

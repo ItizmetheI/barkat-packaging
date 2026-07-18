@@ -1,17 +1,20 @@
 import { useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
+import useChapterOpacity from '../hooks/useChapterOpacity'
 
 const CHAPTER_START = 0.62
 const CHAPTER_END = 0.75
+// Ch.7 (Spec) has no geometry of its own - it settles the camera on THIS box and shows HUD
+// stats over it. So the box's visibility spans both chapters; only camera control is scoped
+// to Ch.6's own range. Fades out as Ch.8's pallet/boxes take over.
+const VISIBLE_END = 0.85
 const CAMERA_START = [3, 2, 3]
 const CAMERA_END = [0, 2, 4]
 const LOOK_AT = [0, 1, 0]
 // Same lightened brand navy as Ch.4's print layer - this is that same printed board, now folding
 const BOARD_COLOR = '#1E3A5F'
 const PANEL_SIZE = 2
-// Fraction of this chapter's own local range spent fading the panels in from invisible
-const FADE_IN = 0.15
 
 // Ch.6 THE FOLD: 62-75% scroll, camera orbits a folding board as 4 wall panels hinge up
 // from a fixed base into an open box. ponytail: 5 panels (base + 4 walls), not the PRD's
@@ -19,9 +22,10 @@ const FADE_IN = 0.15
 // the PRD calls this "simple rigged animation, not complex modeling." Add the lid once
 // this pass is approved.
 //
-// All 5 panels fade in from opacity 0 as this chapter starts - without this they're solid,
-// fully-opaque meshes sitting at the world origin from the very first frame, visible behind
-// every earlier chapter for the entire site (a real bug, not a scroll-tracking issue).
+// All 5 panels fade with useChapterOpacity (in at Ch.6's start, out at Ch.7's end) - without
+// this they're solid, fully-opaque meshes sitting at the world origin from the very first
+// frame, visible behind every earlier chapter for the entire site (a real bug, not a
+// scroll-tracking issue).
 export default function Chapter6_Fold({ progressRef }) {
   const frontRef = useRef(null)
   const backRef = useRef(null)
@@ -29,12 +33,15 @@ export default function Chapter6_Fold({ progressRef }) {
   const rightRef = useRef(null)
   const materialRefs = useRef([])
   const { camera } = useThree()
+  const getOpacity = useChapterOpacity(progressRef, CHAPTER_START, VISIBLE_END)
 
   useFrame(() => {
     const global = progressRef.current
     const local = THREE.MathUtils.clamp((global - CHAPTER_START) / (CHAPTER_END - CHAPTER_START), 0, 1)
 
-    if (global >= CHAPTER_START) {
+    // Explicit handoff: only write the camera within this chapter's own range (Ch.7 takes
+    // over from CHAPTER_END, even though this box stays visible through Ch.7).
+    if (global >= CHAPTER_START && global < CHAPTER_END) {
       camera.position.set(
         THREE.MathUtils.lerp(CAMERA_START[0], CAMERA_END[0], local),
         THREE.MathUtils.lerp(CAMERA_START[1], CAMERA_END[1], local),
@@ -48,7 +55,7 @@ export default function Chapter6_Fold({ progressRef }) {
     if (leftRef.current) leftRef.current.rotation.z = THREE.MathUtils.lerp(Math.PI / 2, 0, local)
     if (rightRef.current) rightRef.current.rotation.z = THREE.MathUtils.lerp(-Math.PI / 2, 0, local)
 
-    const opacity = THREE.MathUtils.clamp(local / FADE_IN, 0, 1)
+    const opacity = getOpacity()
     materialRefs.current.forEach((m) => {
       if (m) m.opacity = opacity
     })

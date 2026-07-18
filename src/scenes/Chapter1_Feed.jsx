@@ -12,14 +12,16 @@ export default function Chapter1_Feed({ progressRef, paperRef }) {
   const { camera } = useThree()
 
   useFrame(() => {
-    const local = THREE.MathUtils.clamp(
-      (progressRef.current - CHAPTER_START) / (CHAPTER_END - CHAPTER_START),
-      0,
-      1
-    )
+    const global = progressRef.current
+    const local = THREE.MathUtils.clamp((global - CHAPTER_START) / (CHAPTER_END - CHAPTER_START), 0, 1)
 
-    camera.position.set(0, 1.5, THREE.MathUtils.lerp(CAMERA_START_Z, CAMERA_END_Z, local))
-    camera.lookAt(0, 1.5, 0)
+    // Explicit handoff: only write the camera within this chapter's own range, instead of
+    // leaving it to component mount order to arbitrate who wins each frame. Inclusive start
+    // so the camera is correctly positioned at global=0, before any scroll has happened.
+    if (global >= CHAPTER_START && global < CHAPTER_END) {
+      camera.position.set(0, 1.5, THREE.MathUtils.lerp(CAMERA_START_Z, CAMERA_END_Z, local))
+      camera.lookAt(0, 1.5, 0)
+    }
 
     // TODO: swap flat color for real kraft-paper photo texture; offset.x below then drives the unspool motion
     const material = paperRef.current?.material

@@ -19,7 +19,8 @@ export default function Chapter2_Flute({ progressRef, fluteUniforms }) {
 
     fluteUniforms.uFluteProgress.value = local
 
-    if (global >= CHAPTER_START) {
+    // Explicit handoff: only write the camera within this chapter's own range.
+    if (global >= CHAPTER_START && global < CHAPTER_END) {
       camera.position.set(0, 1.5, 3)
       camera.rotation.set(0, THREE.MathUtils.lerp(ROTATION_Y_START, ROTATION_Y_END, local), 0)
     }

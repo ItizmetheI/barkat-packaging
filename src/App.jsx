@@ -68,7 +68,7 @@ function App() {
     <>
       <SceneCanvas>
         <Chapter0_Load />
-        <PaperPlane ref={paperRef} onBeforeCompile={handlePaperBeforeCompile} />
+        <PaperPlane ref={paperRef} onBeforeCompile={handlePaperBeforeCompile} progressRef={progressRef} />
         <Chapter1_Feed progressRef={progressRef} paperRef={paperRef} />
         <Chapter2_Flute progressRef={progressRef} fluteUniforms={fluteUniforms} />
         <Chapter3_Laminate progressRef={progressRef} />

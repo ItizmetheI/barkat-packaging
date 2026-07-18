@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
+import useChapterOpacity from '../hooks/useChapterOpacity'
 
 const CHAPTER_START = 0.38
 const CHAPTER_END = 0.5
@@ -21,19 +22,21 @@ const PRINT_COLOR = '#1E3A5F'
 export default function Chapter4_Press({ progressRef }) {
   const printRef = useRef(null)
   const { camera } = useThree()
+  const getOpacity = useChapterOpacity(progressRef, CHAPTER_START, CHAPTER_END)
 
   useFrame(() => {
     const global = progressRef.current
     const local = THREE.MathUtils.clamp((global - CHAPTER_START) / (CHAPTER_END - CHAPTER_START), 0, 1)
 
-    if (global >= CHAPTER_START) {
+    // Explicit handoff: only write the camera within this chapter's own range.
+    if (global >= CHAPTER_START && global < CHAPTER_END) {
       const x = THREE.MathUtils.lerp(CAMERA_X_START, CAMERA_X_END, local)
       camera.position.set(x, CAMERA_Y, CAMERA_Z)
       camera.lookAt(x, CAMERA_Y, 0)
     }
 
     if (printRef.current) {
-      printRef.current.material.opacity = local
+      printRef.current.material.opacity = getOpacity()
     }
   })
 

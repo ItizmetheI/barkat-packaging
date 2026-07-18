@@ -1,6 +1,7 @@
 import { useRef, useMemo } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
+import useChapterOpacity from '../hooks/useChapterOpacity'
 
 const CHAPTER_START = 0.5
 const CHAPTER_END = 0.62
@@ -34,41 +35,46 @@ export default function Chapter5_Cut({ progressRef }) {
   const foldRef = useRef(null)
   const highlightRef = useRef(null)
   const { camera } = useThree()
+  const getOpacity = useChapterOpacity(progressRef, CHAPTER_START, CHAPTER_END)
 
   // Built imperatively + rendered via <primitive> rather than the <line> JSX intrinsic,
   // which crashed the R3F reconciler on this three.js version (context-loss loop).
   const outlineLine = useMemo(() => {
     const geo = new THREE.BufferGeometry().setFromPoints(OUTLINE_POINTS.map((p) => new THREE.Vector3(...p)))
-    return new THREE.Line(geo, new THREE.LineBasicMaterial({ color: LINE_COLOR }))
+    return new THREE.Line(geo, new THREE.LineBasicMaterial({ color: LINE_COLOR, transparent: true, opacity: 0 }))
   }, [])
   const foldLine = useMemo(() => {
     const geo = new THREE.BufferGeometry().setFromPoints(FOLD_POINTS.map((p) => new THREE.Vector3(...p)))
     // ponytail: plain line, not dashed - LineDashedMaterial + computeLineDistances crashed
     // the WebGL context in this environment; the dash detail isn't worth chasing further.
-    return new THREE.Line(geo, new THREE.LineBasicMaterial({ color: LINE_COLOR }))
+    return new THREE.Line(geo, new THREE.LineBasicMaterial({ color: LINE_COLOR, transparent: true, opacity: 0 }))
   }, [])
 
   useFrame(() => {
     const global = progressRef.current
     const local = THREE.MathUtils.clamp((global - CHAPTER_START) / (CHAPTER_END - CHAPTER_START), 0, 1)
 
-    if (global >= CHAPTER_START) {
+    // Explicit handoff: only write the camera within this chapter's own range.
+    if (global >= CHAPTER_START && global < CHAPTER_END) {
       camera.position.set(0, 1.5, THREE.MathUtils.lerp(CAMERA_Z_START, CAMERA_Z_END, local))
       camera.lookAt(0, 1.5, 0)
     }
 
+    const opacity = getOpacity()
     const outlineReveal = THREE.MathUtils.clamp(local / 0.7, 0, 1)
     const foldReveal = THREE.MathUtils.clamp((local - 0.3) / 0.5, 0, 1)
     const highlight = THREE.MathUtils.clamp((local - 0.75) / 0.25, 0, 1)
 
     if (outlineRef.current) {
       outlineRef.current.geometry.setDrawRange(0, Math.floor(outlineReveal * OUTLINE_POINTS.length))
+      outlineRef.current.material.opacity = opacity
     }
     if (foldRef.current) {
       foldRef.current.geometry.setDrawRange(0, Math.floor(foldReveal * FOLD_POINTS.length))
+      foldRef.current.material.opacity = opacity
     }
     if (highlightRef.current) {
-      highlightRef.current.material.opacity = highlight * 0.35
+      highlightRef.current.material.opacity = highlight * 0.35 * opacity
     }
   })
 
