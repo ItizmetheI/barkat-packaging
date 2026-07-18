@@ -9,6 +9,8 @@ export default function SceneCanvas({ children }) {
       <Canvas>
         <ambientLight intensity={0.6} />
         <directionalLight position={[5, 5, 5]} intensity={1} />
+        {/* Native three.js fog (no dependency) - cheap depth cue, matches the void so it reads as atmosphere not a hard cutoff */}
+        <fogExp2 attach="fog" args={['#000000', 0.025]} />
         {children}
       </Canvas>
     </div>

@@ -1,10 +1,11 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
 import gsap from 'gsap'
 import SceneCanvas from './components/SceneCanvas'
 import LoadingScreen from './components/LoadingScreen'
 import SpecHUD from './components/SpecHUD'
 import FounderQuote from './components/FounderQuote'
 import ContactForm from './components/ContactForm'
+import ChapterCopy from './components/ChapterCopy'
 import Chapter0_Load from './scenes/Chapter0_Load'
 import PaperPlane from './scenes/PaperPlane'
 import Chapter1_Feed from './scenes/Chapter1_Feed'
@@ -32,7 +33,6 @@ function App() {
   const loadingRef = useRef(null)
   const paperRef = useRef(null)
   const fluteUniforms = useRef(createFluteUniforms()).current
-  const debugRef = useRef(null)
 
   function handleLoadComplete() {
     gsap.to(loadingRef.current, {
@@ -64,18 +64,6 @@ function App() {
     )
   }
 
-  // ponytail: temporary debug readout for uFluteProgress - remove once Ch.2's scroll
-  // tracking is confirmed working, per this prompt's own instruction.
-  useEffect(() => {
-    function tick() {
-      if (debugRef.current) {
-        debugRef.current.innerText = `uFluteProgress: ${fluteUniforms.uFluteProgress.value.toFixed(3)}`
-      }
-    }
-    gsap.ticker.add(tick)
-    return () => gsap.ticker.remove(tick)
-  }, [fluteUniforms])
-
   return (
     <>
       <SceneCanvas>
@@ -91,26 +79,10 @@ function App() {
         <Chapter8_Dock progressRef={progressRef} />
       </SceneCanvas>
 
+      <ChapterCopy progressRef={progressRef} />
       <SpecHUD progressRef={progressRef} />
       <FounderQuote progressRef={progressRef} />
       <ContactForm progressRef={progressRef} />
-
-      <div
-        ref={debugRef}
-        style={{
-          position: 'fixed',
-          bottom: 16,
-          right: 16,
-          zIndex: 40,
-          fontFamily: 'monospace',
-          fontSize: 12,
-          color: '#F7F8FA',
-          background: 'rgba(0,0,0,0.5)',
-          padding: '4px 8px',
-        }}
-      >
-        uFluteProgress: 0.000
-      </div>
 
       {/* Full chapter map (Ch.0-10, 0-100%) now exists - this spacer's length is the actual
           scroll-to-progress mapping for the whole site, no longer a placeholder */}
