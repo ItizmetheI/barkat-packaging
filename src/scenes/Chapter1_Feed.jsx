@@ -1,12 +1,13 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
+import { easeInOutCubic } from '../utils/easing'
 
 const CHAPTER_START = 0
-const CHAPTER_END = 0.1
+const CHAPTER_END = 0.5
 const CAMERA_START_Z = 8
 const CAMERA_END_Z = 3
 
-// Ch.1 THE FEED: 0-10% scroll, camera dollies (0,1.5,8)->(0,1.5,3), kraft paper plane unspools
+// Ch.1 THE FEED: 0-50% scroll, camera dollies (0,1.5,8)->(0,1.5,3), kraft paper plane unspools
 // via UV offset. Pure controller now - the plane itself lives in PaperPlane.jsx, shared with Ch.2.
 export default function Chapter1_Feed({ progressRef, paperRef }) {
   const { camera } = useThree()
@@ -14,12 +15,13 @@ export default function Chapter1_Feed({ progressRef, paperRef }) {
   useFrame(() => {
     const global = progressRef.current
     const local = THREE.MathUtils.clamp((global - CHAPTER_START) / (CHAPTER_END - CHAPTER_START), 0, 1)
+    const eased = easeInOutCubic(local)
 
     // Explicit handoff: only write the camera within this chapter's own range, instead of
     // leaving it to component mount order to arbitrate who wins each frame. Inclusive start
     // so the camera is correctly positioned at global=0, before any scroll has happened.
     if (global >= CHAPTER_START && global < CHAPTER_END) {
-      camera.position.set(0, 1.5, THREE.MathUtils.lerp(CAMERA_START_Z, CAMERA_END_Z, local))
+      camera.position.set(0, 1.5, THREE.MathUtils.lerp(CAMERA_START_Z, CAMERA_END_Z, eased))
       camera.lookAt(0, 1.5, 0)
     }
 

@@ -64,11 +64,11 @@ function App() {
 
   return (
     <>
-      {/* Short scroll-scrubbed 3D intro (Feed -> Flute only, ~0-25% local progress over
-          300vh) - a cinematic opener, not the whole site. SceneCanvas/ChapterCopy are both
-          sticky within this wrapper so they release once it scrolls past, handing off to
-          the normal-flowing website sections below. */}
-      <div ref={introRef} style={{ position: 'relative', height: '300vh' }}>
+      {/* Short scroll-scrubbed 3D intro (Feed -> Flute, each chapter now spans half the
+          local 0-1 range over 450vh, ~225vh per chapter) - a cinematic opener, not the whole
+          site. SceneCanvas/ChapterCopy are both sticky within this wrapper so they release
+          once it scrolls past, handing off to the normal-flowing website sections below. */}
+      <div ref={introRef} style={{ position: 'relative', height: '450vh' }}>
         <SceneCanvas>
           <Chapter0_Load />
           <PaperPlane ref={paperRef} onBeforeCompile={handlePaperBeforeCompile} progressRef={progressRef} />

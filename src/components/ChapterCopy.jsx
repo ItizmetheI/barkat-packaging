@@ -7,14 +7,14 @@ import gsap from 'gsap'
 const CHAPTERS = [
   {
     start: 0,
-    end: 0.1,
+    end: 0.5,
     eyebrow: '01 — THE FEED',
     title: 'One sheet. Every box starts here.',
     body: 'Raw linerboard, uncut and unformed — the beginning of every order that leaves the plant.',
   },
   {
-    start: 0.1,
-    end: 0.25,
+    start: 0.5,
+    end: 1.0,
     eyebrow: '02 — THE FLUTE',
     title: 'Strength is built, not added.',
     body: 'The corrugated wave is what turns flat paper into structure — this is the shape that carries the load.',

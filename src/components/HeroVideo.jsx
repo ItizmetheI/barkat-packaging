@@ -1,17 +1,32 @@
+import { useEffect, useRef } from 'react'
 import heroVideo from '../assets/video/hero-manufacturing.mp4'
+import heroPoster from '../assets/photos/warehouse-dock.jpg'
 
 // The first real (non-3D) section a visitor reaches, right after the short scroll-scrubbed
 // intro. Plain autoplay/muted/loop video banner - the technique every product site uses for
 // a hero, not something that needs GSAP or scroll-scrubbing of its own.
 // TODO: swap for Barkat's own plant-floor footage once Ahmed provides it.
 export default function HeroVideo() {
+  const videoRef = useRef(null)
+
+  // JSX `muted` alone doesn't reliably set the DOM property before Chrome's autoplay check
+  // runs on mount - set it imperatively before calling play() so autoplay isn't silently blocked.
+  useEffect(() => {
+    const el = videoRef.current
+    if (!el) return
+    el.muted = true
+    el.play().catch(() => {})
+  }, [])
+
   return (
     <section style={{ position: 'relative', height: '90vh', minHeight: 560, overflow: 'hidden' }}>
       <video
+        ref={videoRef}
         autoPlay
         muted
         loop
         playsInline
+        poster={heroPoster}
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
       >
         <source src={heroVideo} type="video/mp4" />

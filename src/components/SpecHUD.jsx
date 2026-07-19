@@ -1,3 +1,6 @@
+import paperRollsWide from '../assets/photos/paper-rolls-wide.jpg'
+import Reveal from './Reveal'
+
 // TODO: replace with Ahmed's real factory specs (PRD Section 8 open item - flute types
 // offered, GSM range, capacity/day, certifications). These are representative industry-
 // standard reference figures for corrugated packaging, not claims about Barkat specifically.
@@ -12,9 +15,25 @@ const STATS = [
 // existed during Ch.7's 3D scroll range.
 export default function SpecHUD() {
   return (
-    <section style={{ padding: '64px 6%', background: '#0F1520', borderTop: '1px solid rgba(247,248,250,0.08)', borderBottom: '1px solid rgba(247,248,250,0.08)' }}>
+    <section
+      style={{
+        position: 'relative',
+        padding: '64px 6%',
+        borderTop: '1px solid rgba(247,248,250,0.08)',
+        borderBottom: '1px solid rgba(247,248,250,0.08)',
+        overflow: 'hidden',
+      }}
+    >
+      <img
+        src={paperRollsWide}
+        alt=""
+        loading="lazy"
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+      />
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(15,21,32,0.92) 0%, rgba(15,21,32,0.88) 100%)' }} />
       <div
         style={{
+          position: 'relative',
           maxWidth: 1200,
           margin: '0 auto',
           display: 'grid',
@@ -22,13 +41,15 @@ export default function SpecHUD() {
           gap: 32,
         }}
       >
-        {STATS.map((stat) => (
-          <div key={stat.label} style={{ borderLeft: '2px solid #C9A961', paddingLeft: 16 }}>
-            <div style={{ fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.1em', color: 'rgba(247,248,250,0.6)' }}>
-              {stat.label}
+        {STATS.map((stat, i) => (
+          <Reveal key={stat.label} delay={i * 0.08}>
+            <div style={{ borderLeft: '2px solid #C9A961', paddingLeft: 16 }}>
+              <div style={{ fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.1em', color: 'rgba(247,248,250,0.6)' }}>
+                {stat.label}
+              </div>
+              <div style={{ fontSize: 26, fontWeight: 600, color: '#F7F8FA', marginTop: 4 }}>{stat.value}</div>
             </div>
-            <div style={{ fontSize: 26, fontWeight: 600, color: '#F7F8FA', marginTop: 4 }}>{stat.value}</div>
-          </div>
+          </Reveal>
         ))}
       </div>
     </section>

@@ -2,7 +2,7 @@ import { forwardRef, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
-const VISIBLE_END = 0.25 // combined Ch.1 (unspool) + Ch.2 (flute) range - fades out as Ch.3 takes over
+const VISIBLE_END = 1.0 // combined Ch.1 (unspool) + Ch.2 (flute) range - both now span the full intro, fades out as the intro hands off to the real DOM site
 const FADE_FRACTION = 0.15
 const FADE_OUT_START = VISIBLE_END - VISIBLE_END * FADE_FRACTION
 
