@@ -2,20 +2,17 @@ import { useRef } from 'react'
 import gsap from 'gsap'
 import SceneCanvas from './components/SceneCanvas'
 import LoadingScreen from './components/LoadingScreen'
+import HeroVideo from './components/HeroVideo'
+import ProcessGallery from './components/ProcessGallery'
 import SpecHUD from './components/SpecHUD'
 import FounderQuote from './components/FounderQuote'
 import ContactForm from './components/ContactForm'
+import SiteFooter from './components/SiteFooter'
 import ChapterCopy from './components/ChapterCopy'
 import Chapter0_Load from './scenes/Chapter0_Load'
 import PaperPlane from './scenes/PaperPlane'
 import Chapter1_Feed from './scenes/Chapter1_Feed'
 import Chapter2_Flute from './scenes/Chapter2_Flute'
-import Chapter3_Laminate from './scenes/Chapter3_Laminate'
-import Chapter4_Press from './scenes/Chapter4_Press'
-import Chapter5_Cut from './scenes/Chapter5_Cut'
-import Chapter6_Fold from './scenes/Chapter6_Fold'
-import Chapter7_Spec from './scenes/Chapter7_Spec'
-import Chapter8_Dock from './scenes/Chapter8_Dock'
 import useScrollTimeline from './hooks/useScrollTimeline'
 
 // Shared uniforms for the flute vertex-displacement shader (Ch.2 mutates uFluteProgress
@@ -29,7 +26,8 @@ function createFluteUniforms() {
 }
 
 function App() {
-  const { progressRef } = useScrollTimeline()
+  const introRef = useRef(null)
+  const { progressRef } = useScrollTimeline(introRef)
   const loadingRef = useRef(null)
   const paperRef = useRef(null)
   const fluteUniforms = useRef(createFluteUniforms()).current
@@ -66,27 +64,26 @@ function App() {
 
   return (
     <>
-      <SceneCanvas>
-        <Chapter0_Load />
-        <PaperPlane ref={paperRef} onBeforeCompile={handlePaperBeforeCompile} progressRef={progressRef} />
-        <Chapter1_Feed progressRef={progressRef} paperRef={paperRef} />
-        <Chapter2_Flute progressRef={progressRef} fluteUniforms={fluteUniforms} />
-        <Chapter3_Laminate progressRef={progressRef} />
-        <Chapter4_Press progressRef={progressRef} />
-        <Chapter5_Cut progressRef={progressRef} />
-        <Chapter6_Fold progressRef={progressRef} />
-        <Chapter7_Spec progressRef={progressRef} />
-        <Chapter8_Dock progressRef={progressRef} />
-      </SceneCanvas>
+      {/* Short scroll-scrubbed 3D intro (Feed -> Flute only, ~0-25% local progress over
+          300vh) - a cinematic opener, not the whole site. SceneCanvas/ChapterCopy are both
+          sticky within this wrapper so they release once it scrolls past, handing off to
+          the normal-flowing website sections below. */}
+      <div ref={introRef} style={{ position: 'relative', height: '300vh' }}>
+        <SceneCanvas>
+          <Chapter0_Load />
+          <PaperPlane ref={paperRef} onBeforeCompile={handlePaperBeforeCompile} progressRef={progressRef} />
+          <Chapter1_Feed progressRef={progressRef} paperRef={paperRef} />
+          <Chapter2_Flute progressRef={progressRef} fluteUniforms={fluteUniforms} />
+        </SceneCanvas>
+        <ChapterCopy progressRef={progressRef} />
+      </div>
 
-      <ChapterCopy progressRef={progressRef} />
-      <SpecHUD progressRef={progressRef} />
-      <FounderQuote progressRef={progressRef} />
-      <ContactForm progressRef={progressRef} />
-
-      {/* Full chapter map (Ch.0-10, 0-100%) now exists - this spacer's length is the actual
-          scroll-to-progress mapping for the whole site, no longer a placeholder */}
-      <div style={{ height: '1000vh' }} />
+      <HeroVideo />
+      <ProcessGallery />
+      <SpecHUD />
+      <FounderQuote />
+      <ContactForm />
+      <SiteFooter />
 
       <LoadingScreen ref={loadingRef} onComplete={handleLoadComplete} />
     </>

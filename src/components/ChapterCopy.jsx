@@ -1,9 +1,9 @@
 import { useRef, useEffect } from 'react'
 import gsap from 'gsap'
 
-// TODO: replace with Ahmed's real copy once the PRD's Section 8 items land (specs, certs,
-// actual capabilities) - this is real corrugated-packaging process knowledge, not a
-// fabricated claim about Barkat's own operations specifically.
+// Only the two chapters that still run as 3D (Feed, Flute) - Bond through Dock moved to
+// ProcessGallery.jsx as real-photo sections once the 3D scroll was cut down to a short
+// intro instead of the whole site. Same verbatim copy as before, not rewritten.
 const CHAPTERS = [
   {
     start: 0,
@@ -18,48 +18,6 @@ const CHAPTERS = [
     eyebrow: '02 — THE FLUTE',
     title: 'Strength is built, not added.',
     body: 'The corrugated wave is what turns flat paper into structure — this is the shape that carries the load.',
-  },
-  {
-    start: 0.25,
-    end: 0.38,
-    eyebrow: '03 — THE BOND',
-    title: 'Three layers become one.',
-    body: 'Liner, flute, liner — pressed and bonded into a single board built to spec, not guessed at.',
-  },
-  {
-    start: 0.38,
-    end: 0.5,
-    eyebrow: '04 — THE PRINT',
-    title: 'Your brand, on the board.',
-    body: 'Print goes on before the cut — built to survive the trip, not just look good on day one.',
-  },
-  {
-    start: 0.5,
-    end: 0.62,
-    eyebrow: '05 — THE CUT',
-    title: 'Precision, every time.',
-    body: 'Every panel cut to the same line, at the same tolerance, order after order.',
-  },
-  {
-    start: 0.62,
-    end: 0.75,
-    eyebrow: '06 — THE FOLD',
-    title: 'Flat becomes box.',
-    body: "The fold is where the design proves itself — or doesn't.",
-  },
-  {
-    start: 0.75,
-    end: 0.85,
-    eyebrow: '07 — THE SPEC',
-    title: 'Built for what it carries.',
-    body: 'Flute type, board weight, burst strength — chosen for the load, not the average.',
-  },
-  {
-    start: 0.85,
-    end: 0.93,
-    eyebrow: '08 — THE DOCK',
-    title: 'Counted. Palletized. Gone.',
-    body: 'On schedule, every order — this is the part that actually matters to the buyer.',
   },
 ]
 const EDGE_FADE = 0.15 // fraction of each chapter's own range spent fading in/out at its edges
@@ -92,7 +50,7 @@ export default function ChapterCopy({ progressRef }) {
   }, [progressRef])
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 8, pointerEvents: 'none' }}>
+    <div style={{ position: 'sticky', top: 0, height: '100vh', zIndex: 8, pointerEvents: 'none' }}>
       {CHAPTERS.map((ch, i) => (
         <div
           key={ch.eyebrow}

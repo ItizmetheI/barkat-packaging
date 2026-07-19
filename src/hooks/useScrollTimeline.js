@@ -4,16 +4,20 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-// Single ScrollTrigger tied to document scroll - the one source of truth for
-// scroll progress (0-1). Chapters remap this to their own local range instead
-// of creating their own ScrollTriggers.
-export default function useScrollTimeline() {
+// Single ScrollTrigger tied to a scroll span - the one source of truth for that
+// span's progress (0-1). Chapters remap this to their own local range instead of
+// creating their own ScrollTriggers.
+//
+// Scoped to triggerRef's element (its own height defines the 0-1 span) rather than
+// document.body, so the 3D chapter intro can occupy a short pinned span up top while
+// the rest of the page is a normal-flowing website below it - not the whole document.
+export default function useScrollTimeline(triggerRef) {
   const progressRef = useRef(0)
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
     const trigger = ScrollTrigger.create({
-      trigger: document.body,
+      trigger: triggerRef.current,
       start: 'top top',
       end: 'bottom bottom',
       scrub: true,
@@ -23,7 +27,7 @@ export default function useScrollTimeline() {
       },
     })
     return () => trigger.kill()
-  }, [])
+  }, [triggerRef])
 
   return { progress, progressRef }
 }
