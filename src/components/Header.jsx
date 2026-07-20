@@ -1,7 +1,7 @@
 import { animate } from 'animejs'
 
 const LINKS = [
-  { label: 'About', href: '#about' },
+  { label: 'Company', href: '#about' },
   { label: 'Process', href: '#process' },
   { label: 'Quality', href: '#quality' },
   { label: 'Contact', href: '#contact' },
@@ -75,7 +75,7 @@ export default function Header() {
             textDecoration: 'none',
           }}
         >
-          REQUEST A QUOTE
+          GET A QUOTE
         </a>
       </nav>
     </header>

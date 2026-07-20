@@ -1,5 +1,5 @@
 const LINKS = [
-  { label: 'About', href: '#about' },
+  { label: 'Company', href: '#about' },
   { label: 'Process', href: '#process' },
   { label: 'Quality', href: '#quality' },
   { label: 'Contact', href: '#contact' },
@@ -22,7 +22,7 @@ export default function SiteFooter() {
         <div style={{ maxWidth: 320 }}>
           <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: '0.25em', color: '#F7F8FA', marginBottom: 12 }}>BARKAT</div>
           <p style={{ fontSize: 14, lineHeight: 1.6, margin: 0 }}>
-            Corrugated packaging built to spec — from raw linerboard to a palletized order on the dock.
+            Corrugated packaging built to spec — linerboard in, a palletized order out the dock door.
           </p>
         </div>
 
@@ -60,7 +60,7 @@ export default function SiteFooter() {
         }}
       >
         <span>© {new Date().getFullYear()} Barkat Packaging</span>
-        <span>Corrugated boxes, built to spec.</span>
+        <span>Every order, to spec.</span>
       </div>
     </footer>
   )

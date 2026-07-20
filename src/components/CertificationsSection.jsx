@@ -1,4 +1,6 @@
+import { useRef } from 'react'
 import Reveal from './Reveal'
+import useParallax from '../hooks/useParallax'
 
 // TODO(Ahmed): these are the certifications a corrugated packaging plant of this
 // scale would plausibly hold - NOT a verified list of Barkat's actual certifications.
@@ -7,24 +9,49 @@ const CERTS = [
   {
     name: 'ISO 9001:2015',
     label: 'Quality Management',
-    body: 'Certified quality management system covering production, inspection, and continuous improvement.',
+    body: 'Quality management system audited across production, inspection, and corrective action.',
   },
   {
     name: 'FSC Chain of Custody',
     label: 'Responsible Sourcing',
-    body: 'Fiber traceable from certified forests through every stage of board production.',
+    body: 'Fiber tracked from certified forest to finished board, every stage documented.',
   },
   {
     name: 'BRCGS Packaging',
     label: 'Packaging Materials Standard',
-    body: 'Global standard for packaging safety, hygiene, and manufacturing quality control.',
+    body: 'Third-party audited standard for packaging safety, hygiene, and process control.',
   },
 ]
 
 export default function CertificationsSection() {
+  const sectionRef = useRef(null)
+  const bgRef = useParallax(sectionRef, 45)
+
   return (
-    <section id="quality" style={{ padding: '112px 6%', background: 'var(--bg)' }}>
-      <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+    <section
+      ref={sectionRef}
+      id="quality"
+      style={{ padding: '112px 6%', background: 'var(--bg)', position: 'relative', overflow: 'hidden' }}
+    >
+      <div
+        ref={bgRef}
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: '-8%',
+          left: 0,
+          right: 0,
+          margin: '0 auto',
+          width: 'min(70vw, 820px)',
+          height: 'min(70vw, 820px)',
+          border: '1px solid var(--accent)',
+          opacity: 0.08,
+          transform: 'rotate(45deg)',
+          zIndex: 0,
+          pointerEvents: 'none',
+        }}
+      />
+      <div style={{ maxWidth: 1400, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <h2
           style={{
             fontSize: 'clamp(28px, 3.5vw, 42px)',
@@ -35,7 +62,7 @@ export default function CertificationsSection() {
             letterSpacing: '-0.01em',
           }}
         >
-          Certified quality
+          Certified, audited, traceable
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
           {CERTS.map((cert, i) => (

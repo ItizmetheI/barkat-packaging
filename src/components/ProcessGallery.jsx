@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { animate } from 'animejs'
 import rawMaterial from '../assets/photos/raw-material.jpg'
 import fluteTexture from '../assets/photos/flute-texture.jpg'
@@ -6,6 +7,7 @@ import precisionCut from '../assets/photos/precision-cut.jpg'
 import foldAssembly from '../assets/photos/fold-assembly.jpg'
 import warehouseDock from '../assets/photos/warehouse-dock.jpg'
 import Reveal from './Reveal'
+import useParallax from '../hooks/useParallax'
 
 // Bond through Dock used to be 3D chapters (Ch.3-8); moved here as a real-photo grid once
 // the 3D scroll was cut down to a cinematic Feed/Cut/Fold/Dock teaser. Same verbatim copy
@@ -51,9 +53,33 @@ const STEPS = [
 ]
 
 export default function ProcessGallery() {
+  const sectionRef = useRef(null)
+  const bgRef = useParallax(sectionRef, 55)
+
   return (
-    <section id="process" style={{ padding: '112px 6%', background: 'var(--bg)' }}>
-      <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+    <section
+      ref={sectionRef}
+      id="process"
+      style={{ padding: '112px 6%', background: 'var(--bg)', position: 'relative', overflow: 'hidden' }}
+    >
+      <div
+        ref={bgRef}
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: '10%',
+          left: 0,
+          right: 0,
+          margin: '0 auto',
+          width: 'min(90vw, 1100px)',
+          height: 'min(90vw, 1100px)',
+          background: 'radial-gradient(circle, var(--accent) 0%, transparent 70%)',
+          opacity: 0.06,
+          zIndex: 0,
+          pointerEvents: 'none',
+        }}
+      />
+      <div style={{ maxWidth: 1400, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <h2
           style={{
             fontSize: 'clamp(28px, 3.5vw, 42px)',

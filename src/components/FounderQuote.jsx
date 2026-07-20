@@ -1,16 +1,22 @@
+import { useRef } from 'react'
 import warehouseWide from '../assets/photos/warehouse-wide.jpg'
 import Reveal from './Reveal'
+import useParallax from '../hooks/useParallax'
 
 // TODO: replace with the real founder/plant manager quote (PRD Section 8 open item)
 const QUOTE =
-  '"Every box that leaves this floor carries our name on it. We don’t ship anything we wouldn’t stand behind ourselves."'
+  '"Our name is on every box that leaves this floor. We don’t sign off on a run we wouldn’t trust with our own freight."'
 const ATTRIBUTION = 'Founder & Plant Manager, Barkat Packaging'
 
 // Static testimonial section - a normal part of the page now, not a scroll-triggered
 // dim-and-fade overlay tied to the old 8-chapter 3D journey.
 export default function FounderQuote() {
+  const sectionRef = useRef(null)
+  const bgRef = useParallax(sectionRef, 40)
+
   return (
     <section
+      ref={sectionRef}
       style={{
         position: 'relative',
         padding: '120px 15%',
@@ -19,10 +25,11 @@ export default function FounderQuote() {
       }}
     >
       <img
+        ref={bgRef}
         src={warehouseWide}
         alt=""
         loading="lazy"
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+        style={{ position: 'absolute', top: -40, left: 0, right: 0, height: 'calc(100% + 80px)', width: '100%', objectFit: 'cover' }}
       />
       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(10,22,40,0.9) 0%, rgba(10,22,40,0.82) 50%, rgba(10,22,40,0.9) 100%)' }} />
       <Reveal style={{ position: 'relative' }}>

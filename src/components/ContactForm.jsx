@@ -30,11 +30,11 @@ export default function ContactForm() {
           }}
           onSubmit={(e) => e.preventDefault()}
         >
-          <h2 style={{ color: 'var(--ink)', fontSize: 20, margin: 0, fontWeight: 600 }}>Request a Quote</h2>
-          <input placeholder="Name" style={inputStyle} />
+          <h2 style={{ color: 'var(--ink)', fontSize: 20, margin: 0, fontWeight: 600 }}>Get a Quote</h2>
+          <input placeholder="Full name" style={inputStyle} />
           <input placeholder="Company" style={inputStyle} />
-          <input placeholder="Email" type="email" style={inputStyle} />
-          <textarea placeholder="Tell us about your packaging needs" rows={4} style={{ ...inputStyle, resize: 'vertical' }} />
+          <input placeholder="Work email" type="email" style={inputStyle} />
+          <textarea placeholder="Board type, dimensions, order volume — tell us what you need" rows={4} style={{ ...inputStyle, resize: 'vertical' }} />
           <button
             type="submit"
             onMouseEnter={(e) => animate(e.currentTarget, { scale: 1.03, duration: 180, ease: 'outQuad' })}
@@ -52,7 +52,7 @@ export default function ContactForm() {
               cursor: 'pointer',
             }}
           >
-            SEND REQUEST
+            GET QUOTE
           </button>
         </form>
       </Reveal>

@@ -1,4 +1,6 @@
+import { useRef } from 'react'
 import Reveal from './Reveal'
+import useParallax from '../hooks/useParallax'
 
 // TODO: replace with Ahmed's real factory specs (PRD Section 8 open item - flute types
 // offered, GSM range, capacity/day, certifications). These are representative industry-
@@ -14,12 +16,41 @@ const STATS = [
 // not a photo-behind-text treatment (kept it to one flat color - cleaner reads as more
 // premium than a busy background image fighting four stat callouts for attention).
 export default function SpecHUD() {
+  const sectionRef = useRef(null)
+  const bgRef = useParallax(sectionRef, 30)
+
   return (
-    <section id="specs" style={{ padding: '72px 6%', background: 'var(--ink)' }}>
+    <section
+      ref={sectionRef}
+      id="specs"
+      style={{ padding: '72px 6%', background: 'var(--ink)', position: 'relative', overflow: 'hidden' }}
+    >
+      <div
+        ref={bgRef}
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: '-30%',
+          right: '4%',
+          fontFamily: 'monospace',
+          fontSize: 'clamp(160px, 18vw, 260px)',
+          fontWeight: 700,
+          lineHeight: 1,
+          color: '#F7F8FA',
+          opacity: 0.05,
+          zIndex: 0,
+          pointerEvents: 'none',
+          userSelect: 'none',
+        }}
+      >
+        SPEC
+      </div>
       <div
         style={{
           maxWidth: 1200,
           margin: '0 auto',
+          position: 'relative',
+          zIndex: 1,
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
           gap: 32,
