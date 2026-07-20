@@ -1,11 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
+import { animate } from 'animejs'
 
 // Reusable scroll-in animation: fades/slides an element up once it enters the viewport.
 // Plain IntersectionObserver, no new dependency and no GSAP ScrollTrigger needed for this -
 // unobserves itself after the first reveal since it never needs to re-trigger.
+// Reveal itself is driven by animejs (outExpo ease) instead of a CSS transition string.
 export default function Reveal({ children, delay = 0, style }) {
   const ref = useRef(null)
-  const [visible, setVisible] = useState(false)
 
   useEffect(() => {
     const el = ref.current
@@ -13,7 +14,13 @@ export default function Reveal({ children, delay = 0, style }) {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setVisible(true)
+          animate(el, {
+            opacity: [0, 1],
+            translateY: [24, 0],
+            duration: 900,
+            delay: delay * 1000,
+            ease: 'outExpo',
+          })
           observer.unobserve(el)
         }
       },
@@ -21,18 +28,10 @@ export default function Reveal({ children, delay = 0, style }) {
     )
     observer.observe(el)
     return () => observer.disconnect()
-  }, [])
+  }, [delay])
 
   return (
-    <div
-      ref={ref}
-      style={{
-        ...style,
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(24px)',
-        transition: `opacity 0.6s cubic-bezier(0.16,1,0.3,1) ${delay}s, transform 0.6s cubic-bezier(0.16,1,0.3,1) ${delay}s`,
-      }}
-    >
+    <div ref={ref} style={{ ...style, opacity: 0 }}>
       {children}
     </div>
   )

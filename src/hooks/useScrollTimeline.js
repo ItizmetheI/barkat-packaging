@@ -11,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger)
 // Scoped to triggerRef's element (its own height defines the 0-1 span) rather than
 // document.body, so the 3D chapter intro can occupy a short pinned span up top while
 // the rest of the page is a normal-flowing website below it - not the whole document.
-export default function useScrollTimeline(triggerRef) {
+export default function useScrollTimeline(triggerRef, scrub = true) {
   const progressRef = useRef(0)
   const [progress, setProgress] = useState(0)
 
@@ -20,14 +20,14 @@ export default function useScrollTimeline(triggerRef) {
       trigger: triggerRef.current,
       start: 'top top',
       end: 'bottom bottom',
-      scrub: true,
+      scrub,
       onUpdate: (self) => {
         progressRef.current = self.progress
         setProgress(self.progress)
       },
     })
     return () => trigger.kill()
-  }, [triggerRef])
+  }, [triggerRef, scrub])
 
   return { progress, progressRef }
 }

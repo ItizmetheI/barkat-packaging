@@ -24,7 +24,7 @@ export default function FounderQuote() {
         loading="lazy"
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
       />
-      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(10,14,20,0.9) 0%, rgba(10,14,20,0.82) 50%, rgba(10,14,20,0.9) 100%)' }} />
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(10,22,40,0.9) 0%, rgba(10,22,40,0.82) 50%, rgba(10,22,40,0.9) 100%)' }} />
       <Reveal style={{ position: 'relative' }}>
         <p style={{ color: '#F7F8FA', fontSize: 'clamp(20px, 2.5vw, 28px)', lineHeight: 1.5, fontStyle: 'italic', margin: 0 }}>
           {QUOTE}

@@ -1,4 +1,3 @@
-import paperRollsWide from '../assets/photos/paper-rolls-wide.jpg'
 import Reveal from './Reveal'
 
 // TODO: replace with Ahmed's real factory specs (PRD Section 8 open item - flute types
@@ -11,29 +10,14 @@ const STATS = [
   { label: 'CAPACITY', value: '50,000 units/day' },
 ]
 
-// Static stat strip - a normal website section now, not a HUD overlay that only
-// existed during Ch.7's 3D scroll range.
+// Static stat strip - a deliberate dark inverted band between light sections for rhythm,
+// not a photo-behind-text treatment (kept it to one flat color - cleaner reads as more
+// premium than a busy background image fighting four stat callouts for attention).
 export default function SpecHUD() {
   return (
-    <section
-      style={{
-        position: 'relative',
-        padding: '64px 6%',
-        borderTop: '1px solid rgba(247,248,250,0.08)',
-        borderBottom: '1px solid rgba(247,248,250,0.08)',
-        overflow: 'hidden',
-      }}
-    >
-      <img
-        src={paperRollsWide}
-        alt=""
-        loading="lazy"
-        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-      />
-      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(15,21,32,0.92) 0%, rgba(15,21,32,0.88) 100%)' }} />
+    <section id="specs" style={{ padding: '72px 6%', background: 'var(--ink)' }}>
       <div
         style={{
-          position: 'relative',
           maxWidth: 1200,
           margin: '0 auto',
           display: 'grid',

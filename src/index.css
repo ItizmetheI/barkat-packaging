@@ -2,9 +2,26 @@
   box-sizing: border-box;
 }
 
+/* Brand palette: off-white bg / navy ink / gold accent - matches the original
+   brand-bg/brand-navy/brand-accent tokens from the project's first scaffold.
+   The loading screen and the cinematic hero are the deliberate dark exceptions -
+   everything else in normal document flow uses this light theme. */
+:root {
+  --bg: #f7f8fa;
+  --bg-alt: #eef0f3;
+  --ink: #0a1628;
+  --ink-soft: rgba(10, 22, 40, 0.7);
+  --accent: #b8933f;
+  --border: rgba(10, 22, 40, 0.1);
+}
+
 body {
   margin: 0;
-  background: #0a0e14;
-  color: #f7f8fa;
+  background: var(--bg);
+  color: var(--ink);
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+a {
+  color: inherit;
 }

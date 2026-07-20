@@ -1,46 +1,53 @@
-import { forwardRef, useRef } from 'react'
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
+import { forwardRef, useEffect, useRef } from 'react'
+import { createTimeline } from 'animejs'
 
-// Repeating sine-wave-like corrugation flute cross-section, 800x100 viewBox
-const FLUTE_PATH =
-  'M0,50 C25,10 75,10 100,50 C125,90 175,90 200,50 C225,10 275,10 300,50 C325,90 375,90 400,50 C425,10 475,10 500,50 C525,90 575,90 600,50 C625,10 675,10 700,50 C725,90 775,90 800,50'
+// Isometric box wireframe that assembles itself, then fills in as solid faces - literally
+// the product, not a generic loading spinner. Replaces the old flute-wave draw.
+// Vertices (viewBox -70,-70 to 70,70): T top, L upper-left, R upper-right, C the front
+// vertex where all 3 faces meet, BL/BR lower corners, B bottom.
+const OUTLINE = 'M0,-55 L-48,-27 L-48,27 L0,55 L48,27 L48,-27 Z'
+const INNER_LINES = ['M-48,-27 L0,0', 'M48,-27 L0,0', 'M0,0 L0,55']
+const TOP_FACE = '0,-55 -48,-27 0,0 48,-27'
+const LEFT_FACE = '-48,-27 -48,27 0,55 0,0'
+const RIGHT_FACE = '48,-27 0,0 0,55 48,27'
 
 const LoadingScreen = forwardRef(function LoadingScreen({ onComplete }, ref) {
   const scopeRef = useRef(null)
-  const leftPathRef = useRef(null)
-  const rightPathRef = useRef(null)
+  const outlineRef = useRef(null)
+  const innerRefs = useRef([])
+  const faceRefs = useRef([])
   const wordmarkRef = useRef(null)
   const counterRef = useRef(null)
 
-  useGSAP(
-    () => {
-      const leftLength = leftPathRef.current.getTotalLength()
-      const rightLength = rightPathRef.current.getTotalLength()
+  useEffect(() => {
+    const outlineLength = outlineRef.current.getTotalLength()
+    outlineRef.current.style.strokeDasharray = outlineLength
+    outlineRef.current.style.strokeDashoffset = outlineLength
 
-      gsap.set(leftPathRef.current, { strokeDasharray: leftLength, strokeDashoffset: leftLength })
-      gsap.set(rightPathRef.current, { strokeDasharray: rightLength, strokeDashoffset: rightLength })
-      gsap.set(wordmarkRef.current, { opacity: 0 })
-      gsap.set(counterRef.current, { innerText: 0 })
+    const counterState = { value: 0 }
+    const tl = createTimeline({ onComplete: () => onComplete?.() })
 
-      const tl = gsap.timeline({ onComplete: () => onComplete?.() })
+    tl.add(outlineRef.current, { strokeDashoffset: 0, duration: 900, ease: 'inOutQuad' }, 0)
+    tl.add(
+      counterState,
+      {
+        value: 100,
+        duration: 1300,
+        ease: 'outQuad',
+        onUpdate: () => {
+          if (counterRef.current) counterRef.current.textContent = Math.round(counterState.value)
+        },
+      },
+      0
+    )
+    tl.add(innerRefs.current, { opacity: [0, 1], duration: 250 }, 800)
+    tl.add(faceRefs.current, { opacity: [0, 1], duration: 350 }, 950)
+    tl.add(wordmarkRef.current, { opacity: [0, 1], translateY: [8, 0], duration: 400 }, 1300)
+    // Fixed floor: overlay stays up at least 1.7s even though the visuals finish sooner
+    tl.add({}, { duration: 400 }, 1700)
 
-      // Fixed floor: overlay stays up at least 1.5s even if everything else finishes sooner
-      tl.to({}, { duration: 1.5 }, 0)
-
-      tl.to(leftPathRef.current, { strokeDashoffset: 0, duration: 1.2, ease: 'power2.inOut' }, 0)
-      tl.to(rightPathRef.current, { strokeDashoffset: 0, duration: 1.2, ease: 'power2.inOut' }, 0)
-
-      tl.to(
-        counterRef.current,
-        { innerText: 100, duration: 1.5, ease: 'power1.out', snap: { innerText: 1 } },
-        0
-      )
-
-      tl.to(wordmarkRef.current, { opacity: 1, duration: 0.4, ease: 'power1.out' }, 1.2)
-    },
-    { scope: scopeRef }
-  )
+    return () => tl.pause()
+  }, [onComplete])
 
   return (
     <div
@@ -54,37 +61,31 @@ const LoadingScreen = forwardRef(function LoadingScreen({ onComplete }, ref) {
         inset: 0,
         zIndex: 50,
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
+        gap: 28,
         overflow: 'hidden',
-        background: '#0A0E14',
+        background: '#0A1628',
       }}
     >
-      <svg
-        style={{ position: 'absolute', left: 0, top: '50%', height: 160, width: '100%', transform: 'translateY(-50%)' }}
-        viewBox="0 0 800 100"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <path ref={leftPathRef} d={FLUTE_PATH} fill="none" stroke="#FFFFFF" strokeWidth="2" transform="translate(0, -20)" />
-        <path
-          ref={rightPathRef}
-          d={FLUTE_PATH}
-          fill="none"
-          stroke="#FFFFFF"
-          strokeWidth="2"
-          transform="translate(0, 20) scale(-1, 1) translate(-800, 0)"
-        />
+      <svg width="140" height="140" viewBox="-70 -70 140 140" aria-hidden="true">
+        <polygon points={TOP_FACE} fill="#E4C77A" ref={(el) => (faceRefs.current[0] = el)} style={{ opacity: 0 }} />
+        <polygon points={LEFT_FACE} fill="#C9A961" ref={(el) => (faceRefs.current[1] = el)} style={{ opacity: 0 }} />
+        <polygon points={RIGHT_FACE} fill="#A6813F" ref={(el) => (faceRefs.current[2] = el)} style={{ opacity: 0 }} />
+        {INNER_LINES.map((d, i) => (
+          <path key={d} d={d} stroke="#0A1628" strokeWidth="1.5" style={{ opacity: 0 }} ref={(el) => (innerRefs.current[i] = el)} />
+        ))}
+        <path ref={outlineRef} d={OUTLINE} fill="none" stroke="#F7F8FA" strokeWidth="2.5" strokeLinejoin="round" />
       </svg>
 
-      {/* Placeholder for the real logo mark - swap for the interlocking SVG logo once received */}
-      <span ref={wordmarkRef} style={{ position: 'relative', fontSize: 24, fontWeight: 600, letterSpacing: '0.3em', color: '#FFFFFF' }}>
-        BARKAT
+      <span ref={wordmarkRef} style={{ opacity: 0, fontSize: 20, fontWeight: 600, letterSpacing: '0.25em', color: '#F7F8FA' }}>
+        BARKAT PACKAGING
       </span>
 
       <span
         ref={counterRef}
-        style={{ position: 'absolute', bottom: 24, left: 24, fontFamily: 'monospace', fontSize: 14, color: '#FFFFFF' }}
+        style={{ position: 'absolute', bottom: 24, left: 24, fontFamily: 'monospace', fontSize: 14, color: '#F7F8FA' }}
       >
         0
       </span>
