@@ -25,7 +25,7 @@ export default function AboutSection() {
     <section
       ref={sectionRef}
       id="about"
-      style={{ padding: '112px 6%', background: 'var(--bg-alt)', position: 'relative', overflow: 'hidden' }}
+      style={{ padding: 'calc(var(--header-h) + 112px) 6% 112px', background: 'var(--bg-alt)', position: 'relative', overflow: 'hidden' }}
     >
       <div
         ref={bgRef}

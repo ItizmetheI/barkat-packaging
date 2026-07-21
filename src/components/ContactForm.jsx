@@ -15,7 +15,7 @@ const inputStyle = {
 // TODO: wire submit to a real endpoint once Ahmed decides where RFQs should land.
 export default function ContactForm() {
   return (
-    <section id="contact" style={{ padding: '112px 6%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-alt)' }}>
+    <section id="contact" style={{ padding: 'calc(var(--header-h) + 112px) 6% 112px', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-alt)' }}>
       <Reveal style={{ width: 'min(480px, 100%)' }}>
         <form
           style={{

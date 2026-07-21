@@ -60,7 +60,7 @@ export default function ProcessGallery() {
     <section
       ref={sectionRef}
       id="process"
-      style={{ padding: '112px 6%', background: 'var(--bg)', position: 'relative', overflow: 'hidden' }}
+      style={{ padding: 'calc(var(--header-h) + 112px) 6% 112px', background: 'var(--bg)', position: 'relative', overflow: 'hidden' }}
     >
       <div
         ref={bgRef}

@@ -1,8 +1,10 @@
+import { Link } from 'react-router-dom'
+
 const LINKS = [
-  { label: 'Company', href: '#about' },
-  { label: 'Process', href: '#process' },
-  { label: 'Quality', href: '#quality' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Company', to: '/about' },
+  { label: 'Process', to: '/process' },
+  { label: 'Quality', to: '/about' },
+  { label: 'Contact', to: '/contact' },
 ]
 
 export default function SiteFooter() {
@@ -30,9 +32,9 @@ export default function SiteFooter() {
           <div style={{ fontSize: 12, letterSpacing: '0.1em', color: 'rgba(247,248,250,0.45)', marginBottom: 14 }}>SITE</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {LINKS.map((link) => (
-              <a key={link.href} href={link.href} style={{ fontSize: 14, color: 'rgba(247,248,250,0.75)', textDecoration: 'none' }}>
+              <Link key={link.label} to={link.to} style={{ fontSize: 14, color: 'rgba(247,248,250,0.75)', textDecoration: 'none' }}>
                 {link.label}
-              </a>
+              </Link>
             ))}
           </div>
         </div>

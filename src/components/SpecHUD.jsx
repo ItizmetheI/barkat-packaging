@@ -11,19 +11,21 @@ const STATS = [
   { label: 'CAPACITY', value: '50,000 units/day' },
 ]
 
-// Static stat strip - a deliberate dark inverted band between light sections for rhythm.
-// Background is a live animated shader (GrainGradient) instead of a flat color or a static
-// faint wordmark - this was the flattest section on the site, and it's the one place a
-// genuinely animated background earns its keep without competing with real photography.
+// Static stat strip - part of the site's light theme like everything else now (was one of
+// four sections silently hardcoding its own separate dark palette, which is why "white and
+// navy" wasn't reading through - see index.css). Background is a live animated shader
+// (GrainGradient) re-keyed to light/warm tones instead of navy - this was the flattest
+// section on the site, and it's the one place a genuinely animated background earns its
+// keep without competing with real photography.
 export default function SpecHUD() {
   return (
     <section id="specs" style={{ padding: '72px 6%', position: 'relative', overflow: 'hidden' }}>
       <GrainGradient
-        colors={['#0A1628', '#1E3A5F', '#0A1628', '#7A5F2E']}
-        colorBack="#0A1628"
+        colors={['#F7F8FA', '#EEF0F3', '#E8DCC0', '#DCE3EA']}
+        colorBack="#EEF0F3"
         softness={0.75}
-        intensity={0.35}
-        noise={0.06}
+        intensity={0.25}
+        noise={0.04}
         shape="ripple"
         speed={0.25}
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
@@ -41,11 +43,11 @@ export default function SpecHUD() {
       >
         {STATS.map((stat, i) => (
           <Reveal key={stat.label} delay={i * 0.08}>
-            <div style={{ borderLeft: '2px solid #C9A961', paddingLeft: 16 }}>
-              <div style={{ fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.1em', color: 'rgba(247,248,250,0.6)' }}>
+            <div style={{ borderLeft: '2px solid var(--accent)', paddingLeft: 16 }}>
+              <div style={{ fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.1em', color: 'var(--ink-soft)' }}>
                 {stat.label}
               </div>
-              <div style={{ fontSize: 26, fontWeight: 600, color: '#F7F8FA', marginTop: 4 }}>{stat.value}</div>
+              <div style={{ fontSize: 26, fontWeight: 600, color: 'var(--ink)', marginTop: 4 }}>{stat.value}</div>
             </div>
           </Reveal>
         ))}

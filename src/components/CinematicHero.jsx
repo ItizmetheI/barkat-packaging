@@ -1,4 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { animate } from 'animejs'
 import useScrollTimeline from '../hooks/useScrollTimeline'
@@ -54,10 +55,10 @@ const GRAIN_URL =
 // on top of everything in a blend mode - three independent layers moving/reading at different
 // depths instead of one text block pasted in a corner.
 //
-// No nav renders anywhere in this component or its wrapper - Header.jsx is a sibling placed
-// after this in App.jsx, so it's structurally impossible for the nav to appear mid-cinematic.
-// A beat rail (right edge) and a scroll cue give orientation instead - "where am I / what do
-// I do" without breaking that rule.
+// Header.jsx (fixed, translucent) floats over this the entire time, on Home specifically -
+// that's deliberate: the video is the first thing on the Home page, not a separate gate
+// the site's chrome waits behind. A beat rail (right edge) and a scroll cue add orientation
+// on top of that.
 const CinematicHero = forwardRef(function CinematicHero(_props, ref) {
   const wrapperRef = useRef(null)
   const videoRef = useRef(null)
@@ -268,9 +269,9 @@ const CinematicHero = forwardRef(function CinematicHero(_props, ref) {
           >
             Watch raw board become a shipped order — start to finish, no cuts.
           </p>
-          <a
+          <Link
             ref={(el) => (openingWordsRef.current[3] = el)}
-            href="#contact"
+            to="/contact"
             style={{
               marginTop: 32,
               padding: '14px 32px',
@@ -283,7 +284,7 @@ const CinematicHero = forwardRef(function CinematicHero(_props, ref) {
             }}
           >
             GET A QUOTE
-          </a>
+          </Link>
         </div>
 
         <div ref={captionLayerRef} style={{ position: 'absolute', left: '6%', right: '6%', bottom: '9%' }}>
@@ -343,8 +344,8 @@ const CinematicHero = forwardRef(function CinematicHero(_props, ref) {
           ))}
         </div>
 
-        {/* Beat rail: orientation ("where am I in this") without being a nav menu - stays
-            inside the cinematic, doesn't violate "no nav during the cinematic". */}
+        {/* Beat rail: orientation ("where am I in this beat sequence") - complements the
+            real site nav now floating on top, doesn't replace it. */}
         <div
           style={{
             position: 'absolute',
@@ -363,21 +364,6 @@ const CinematicHero = forwardRef(function CinematicHero(_props, ref) {
               style={{ width: 3, height: 22, background: '#C9A961', opacity: 0.35, transform: 'scaleY(0.5)', transition: 'opacity 0.2s' }}
             />
           ))}
-        </div>
-
-        <div
-          style={{
-            position: 'absolute',
-            top: '6%',
-            left: '6%',
-            fontFamily: 'monospace',
-            fontSize: 12,
-            letterSpacing: '0.25em',
-            color: 'rgba(247,248,250,0.7)',
-            textShadow: '0 1px 8px rgba(0,0,0,0.6)',
-          }}
-        >
-          BARKAT PACKAGING
         </div>
 
         <div

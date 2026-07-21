@@ -1,17 +1,14 @@
 import { useEffect, useRef } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
 import LoadingScreen from './components/LoadingScreen'
-import CinematicHero from './components/CinematicHero'
-import Header from './components/Header'
-import AboutSection from './components/AboutSection'
-import ProcessGallery from './components/ProcessGallery'
-import CertificationsSection from './components/CertificationsSection'
-import SpecHUD from './components/SpecHUD'
-import FounderQuote from './components/FounderQuote'
-import ContactForm from './components/ContactForm'
-import SiteFooter from './components/SiteFooter'
+import RootLayout from './layouts/RootLayout'
+import HomePage from './pages/HomePage'
+import AboutPage from './pages/AboutPage'
+import ProcessPage from './pages/ProcessPage'
+import ContactPage from './pages/ContactPage'
 
 // Lenis smooth-scroll wraps native scroll (position:sticky, anchor links, a11y all keep
 // working per Lenis's own docs) - it just interpolates scrollY toward its target instead of
@@ -42,7 +39,9 @@ function App() {
   function handleLoadComplete() {
     // Fire the cinematic's entrance (video unblur/unzoom + title reveal) as the loading
     // screen starts fading, so the "wow" beat plays exactly when it's revealed - not before,
-    // while it's still hidden behind the loading screen.
+    // while it's still hidden behind the loading screen. No-ops safely (optional chaining)
+    // if the first real page load is a deep link that isn't Home, since CinematicHero won't
+    // be mounted in that case.
     cinematicRef.current?.playIntro()
     gsap.to(loadingRef.current, {
       opacity: 0,
@@ -56,19 +55,19 @@ function App() {
 
   return (
     <>
-      {/* Cinematic opener (real footage, scroll-scrubbed) - deliberately has no Header
-          rendered anywhere near it. Header only exists further down the tree, in normal
-          document flow after this, so the nav can't appear during the cinematic. */}
-      <CinematicHero ref={cinematicRef} />
-
-      <Header />
-      <AboutSection />
-      <ProcessGallery />
-      <CertificationsSection />
-      <SpecHUD />
-      <FounderQuote />
-      <ContactForm />
-      <SiteFooter />
+      {/* LoadingScreen is a sibling of BrowserRouter, not inside it - React Router's
+          client-side navigation only swaps what's inside <Routes>, so this only ever plays
+          once per real page load, never on route changes, with no extra flag/logic needed. */}
+      <BrowserRouter>
+        <Routes>
+          <Route element={<RootLayout cinematicRef={cinematicRef} />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/process" element={<ProcessPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
 
       <LoadingScreen ref={loadingRef} onComplete={handleLoadComplete} />
     </>
