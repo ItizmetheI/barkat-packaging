@@ -74,18 +74,21 @@ const CinematicHero = forwardRef(function CinematicHero(_props, ref) {
   // Entrance sequence, played on command from App.jsx once the loading screen has actually
   // finished - not on mount, since the component sits hidden behind the loading screen for
   // ~2s and an entrance that already finished by the time it's revealed defeats the point.
+  // Only handles the one-time video unblur/unzoom + word-stagger polish; ongoing visibility
+  // of the opening card itself is owned by tick() below (scroll-progress-driven), not this.
   useImperativeHandle(ref, () => ({
     playIntro() {
       const video = videoRef.current
       if (video) {
         gsap.fromTo(video, { scale: 1.12, filter: 'blur(14px)' }, { scale: 1, filter: 'blur(0px)', duration: 1.6, ease: 'power3.out' })
       }
-      if (openingRef.current) gsap.set(openingRef.current, { opacity: 1 })
-      // Manual index-based stagger delay - animejs v4 has a stagger() helper but a plain
-      // `120 * i` is one line and not worth pulling in for three elements.
+      // translateY-only polish, not opacity: these words are already visible by default
+      // (see JSX below) so a slide-up entrance is a bonus, not something content availability
+      // depends on. Manual index-based stagger delay - animejs v4 has a stagger() helper but
+      // a plain `120 * i` is one line and not worth pulling in for four elements.
       openingWordsRef.current.forEach((el, i) => {
         if (!el) return
-        animate(el, { opacity: [0, 1], translateY: [26, 0], duration: 700, delay: 120 * i, ease: 'outExpo' })
+        animate(el, { translateY: [26, 0], duration: 700, delay: 120 * i, ease: 'outExpo' })
       })
     },
   }))
@@ -102,8 +105,14 @@ const CinematicHero = forwardRef(function CinematicHero(_props, ref) {
     video.addEventListener('loadedmetadata', onMeta)
 
     let lastTime = -1
-    let cueDismissed = false
-    let openingDismissed = false
+    // Continuous scroll-driven opacity for both the opening card and the scroll cue -
+    // NOT a one-shot "dismiss past threshold X" latch. A latch means a single accidental
+    // wheel tick past X permanently hides the card forever (that was the bug: the card
+    // vanished after ~1.5% scroll and never came back, reading as "empty, nothing here").
+    // Full opacity at progress 0 (visible immediately on load, nothing to fade in from),
+    // fading out gradually over OPENING_FADE_END so it survives small scroll jitter.
+    const OPENING_FADE_END = 0.07
+    const CUE_FADE_END = 0.05
     function tick() {
       const duration = durationRef.current
       const progress = progressRef.current
@@ -114,13 +123,11 @@ const CinematicHero = forwardRef(function CinematicHero(_props, ref) {
         lastTime = targetTime
       }
 
-      if (!cueDismissed && progress > 0.02 && scrollCueRef.current) {
-        cueDismissed = true
-        animate(scrollCueRef.current, { opacity: 0, duration: 300, ease: 'outQuad' })
+      if (openingRef.current) {
+        openingRef.current.style.opacity = 1 - gsap.utils.clamp(0, 1, progress / OPENING_FADE_END)
       }
-      if (!openingDismissed && progress > 0.015 && openingRef.current) {
-        openingDismissed = true
-        animate(openingRef.current, { opacity: 0, translateY: -16, duration: 500, ease: 'outQuad' })
+      if (scrollCueRef.current) {
+        scrollCueRef.current.style.opacity = 1 - gsap.utils.clamp(0, 1, progress / CUE_FADE_END)
       }
 
       // Caption layer drifts slightly slower than the video underneath it (parallax) -
@@ -211,9 +218,12 @@ const CinematicHero = forwardRef(function CinematicHero(_props, ref) {
           }}
         />
 
-        {/* Opening title card - only visible at progress~0, before the beat captions take
-            over. Without this the first thing a visitor sees is a bare video frame and a
-            corner wordmark - nothing telling them what they're looking at or why it matters. */}
+        {/* Opening title card - visible by default (opacity owned by tick() above, driven by
+            scroll progress, never a one-shot dismiss). Words are visible from first paint,
+            not gated behind the entrance animation firing - playIntro() only adds a slide-up
+            polish on top (translateY only), so content never depends on that animation
+            succeeding. Includes a real CTA - without one this was "just a video with nothing
+            to do", the exact complaint. */}
         <div
           ref={openingRef}
           style={{
@@ -225,12 +235,11 @@ const CinematicHero = forwardRef(function CinematicHero(_props, ref) {
             justifyContent: 'center',
             textAlign: 'center',
             padding: '0 6%',
-            opacity: 0,
           }}
         >
           <div
             ref={(el) => (openingWordsRef.current[0] = el)}
-            style={{ fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.25em', color: '#C9A961', marginBottom: 18, opacity: 0 }}
+            style={{ fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.25em', color: '#C9A961', marginBottom: 18 }}
           >
             BARKAT PACKAGING
           </div>
@@ -243,7 +252,6 @@ const CinematicHero = forwardRef(function CinematicHero(_props, ref) {
               margin: 0,
               lineHeight: 1.1,
               textShadow: '0 2px 30px rgba(0,0,0,0.55)',
-              opacity: 0,
             }}
           >
             One line. Every box, on spec.
@@ -256,11 +264,26 @@ const CinematicHero = forwardRef(function CinematicHero(_props, ref) {
               marginTop: 18,
               maxWidth: 520,
               textShadow: '0 1px 14px rgba(0,0,0,0.6)',
-              opacity: 0,
             }}
           >
             Watch raw board become a shipped order — start to finish, no cuts.
           </p>
+          <a
+            ref={(el) => (openingWordsRef.current[3] = el)}
+            href="#contact"
+            style={{
+              marginTop: 32,
+              padding: '14px 32px',
+              background: '#C9A961',
+              color: '#0A1628',
+              fontWeight: 600,
+              letterSpacing: '0.04em',
+              fontSize: 14,
+              textDecoration: 'none',
+            }}
+          >
+            GET A QUOTE
+          </a>
         </div>
 
         <div ref={captionLayerRef} style={{ position: 'absolute', left: '6%', right: '6%', bottom: '9%' }}>

@@ -1,6 +1,5 @@
-import { useRef } from 'react'
+import { GrainGradient } from '@paper-design/shaders-react'
 import Reveal from './Reveal'
-import useParallax from '../hooks/useParallax'
 
 // TODO: replace with Ahmed's real factory specs (PRD Section 8 open item - flute types
 // offered, GSM range, capacity/day, certifications). These are representative industry-
@@ -12,39 +11,23 @@ const STATS = [
   { label: 'CAPACITY', value: '50,000 units/day' },
 ]
 
-// Static stat strip - a deliberate dark inverted band between light sections for rhythm,
-// not a photo-behind-text treatment (kept it to one flat color - cleaner reads as more
-// premium than a busy background image fighting four stat callouts for attention).
+// Static stat strip - a deliberate dark inverted band between light sections for rhythm.
+// Background is a live animated shader (GrainGradient) instead of a flat color or a static
+// faint wordmark - this was the flattest section on the site, and it's the one place a
+// genuinely animated background earns its keep without competing with real photography.
 export default function SpecHUD() {
-  const sectionRef = useRef(null)
-  const bgRef = useParallax(sectionRef, 30)
-
   return (
-    <section
-      ref={sectionRef}
-      id="specs"
-      style={{ padding: '72px 6%', background: 'var(--ink)', position: 'relative', overflow: 'hidden' }}
-    >
-      <div
-        ref={bgRef}
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          top: '-30%',
-          right: '4%',
-          fontFamily: 'monospace',
-          fontSize: 'clamp(160px, 18vw, 260px)',
-          fontWeight: 700,
-          lineHeight: 1,
-          color: '#F7F8FA',
-          opacity: 0.05,
-          zIndex: 0,
-          pointerEvents: 'none',
-          userSelect: 'none',
-        }}
-      >
-        SPEC
-      </div>
+    <section id="specs" style={{ padding: '72px 6%', position: 'relative', overflow: 'hidden' }}>
+      <GrainGradient
+        colors={['#0A1628', '#1E3A5F', '#0A1628', '#7A5F2E']}
+        colorBack="#0A1628"
+        softness={0.75}
+        intensity={0.35}
+        noise={0.06}
+        shape="ripple"
+        speed={0.25}
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+      />
       <div
         style={{
           maxWidth: 1200,
