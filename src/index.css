@@ -2,16 +2,15 @@
   box-sizing: border-box;
 }
 
-/* Brand palette: off-white bg / navy ink / gold accent - matches the original
-   brand-bg/brand-navy/brand-accent tokens from the project's first scaffold.
-   The loading screen and the cinematic hero are the deliberate dark exceptions -
-   everything else in normal document flow uses this light theme. */
+/* Brand palette: off-white bg / navy ink / blue accent. The loading screen and
+   the cinematic hero are the deliberate dark exceptions - everything else in
+   normal document flow uses this light theme. */
 :root {
   --bg: #f7f8fa;
   --bg-alt: #eef0f3;
   --ink: #0a1628;
   --ink-soft: rgba(10, 22, 40, 0.7);
-  --accent: #b8933f;
+  --accent: #2e7bc4;
   --border: rgba(10, 22, 40, 0.1);
   --header-h: 76px;
 }
@@ -25,4 +24,59 @@ body {
 
 a {
   color: inherit;
+}
+
+/* Visually hidden until focused - standard skip-link pattern. The rest of the site uses
+   inline styles throughout, but :focus can't be expressed inline, so this one rule lives
+   here instead of introducing a CSS-in-JS focus workaround for a single element. */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 12px;
+  z-index: 100;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 12px 20px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+  top: 12px;
+}
+
+/* Header nav responsive swap - the 6-item nav + phone number + CTA doesn't fit narrow
+   viewports as an inline row, same reason the old 4-item version already overflowed on
+   mobile. Media queries can't be expressed via inline styles, so this one small block
+   lives here instead of a resize-listener/JS breakpoint check. */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.nav-toggle {
+  display: none;
+}
+@media (max-width: 900px) {
+  .nav-links {
+    display: none;
+  }
+  .nav-links.nav-links-open {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    position: fixed;
+    top: var(--header-h);
+    left: 0;
+    right: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 6% 24px;
+  }
+  .nav-toggle {
+    display: block;
+  }
 }

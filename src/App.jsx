@@ -8,7 +8,9 @@ import RootLayout from './layouts/RootLayout'
 import HomePage from './pages/HomePage'
 import AboutPage from './pages/AboutPage'
 import ProcessPage from './pages/ProcessPage'
+import WorkPage from './pages/WorkPage'
 import ContactPage from './pages/ContactPage'
+import NotFoundPage from './pages/NotFoundPage'
 
 // Lenis smooth-scroll wraps native scroll (position:sticky, anchor links, a11y all keep
 // working per Lenis's own docs) - it just interpolates scrollY toward its target instead of
@@ -64,7 +66,9 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/process" element={<ProcessPage />} />
+            <Route path="/work" element={<WorkPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

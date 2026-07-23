@@ -84,7 +84,7 @@ export default function ProcessGallery() {
       />
       <div style={{ position: 'absolute', inset: 0, background: 'var(--bg)', opacity: 0.45, zIndex: 0, pointerEvents: 'none' }} />
       <div style={{ maxWidth: 1400, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-        <h2
+        <h1
           style={{
             fontSize: 'clamp(28px, 3.5vw, 42px)',
             fontWeight: 700,
@@ -95,7 +95,7 @@ export default function ProcessGallery() {
           }}
         >
           From board to box
-        </h2>
+        </h1>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 28 }}>
           {STEPS.map((step, i) => (
             <Reveal key={step.eyebrow} delay={(i % 3) * 0.1}>

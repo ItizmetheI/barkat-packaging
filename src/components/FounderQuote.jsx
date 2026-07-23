@@ -36,7 +36,7 @@ export default function FounderQuote() {
         <p style={{ color: '#F7F8FA', fontSize: 'clamp(20px, 2.5vw, 28px)', lineHeight: 1.5, fontStyle: 'italic', margin: 0 }}>
           {QUOTE}
         </p>
-        <p style={{ color: '#C9A961', fontSize: 14, letterSpacing: '0.1em', marginTop: 24, textTransform: 'uppercase' }}>
+        <p style={{ color: '#4A9EDE', fontSize: 14, letterSpacing: '0.1em', marginTop: 24, textTransform: 'uppercase' }}>
           {ATTRIBUTION}
         </p>
       </Reveal>

@@ -1,4 +1,5 @@
 import { useOutletContext, Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import CinematicHero from '../components/CinematicHero'
 import SpecHUD from '../components/SpecHUD'
 import HomeExplore from '../components/HomeExplore'
@@ -8,6 +9,10 @@ export default function HomePage() {
   const cinematicRef = useOutletContext()
   return (
     <>
+      <Helmet>
+        <title>Barkat Packaging - Corrugated Boxes Built to Spec</title>
+        <meta name="description" content="Corrugated boxes built to spec - board weight, flute profile, and burst strength chosen for the load, not the average. Watch the line, then request a quote." />
+      </Helmet>
       <CinematicHero ref={cinematicRef} />
       <SpecHUD />
       <HomeExplore />

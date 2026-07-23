@@ -21,7 +21,7 @@ export default function SpecHUD() {
   return (
     <section id="specs" style={{ padding: '72px 6%', position: 'relative', overflow: 'hidden' }}>
       <GrainGradient
-        colors={['#F7F8FA', '#EEF0F3', '#E8DCC0', '#DCE3EA']}
+        colors={['#F7F8FA', '#EEF0F3', '#CFE3F2', '#DCE3EA']}
         colorBack="#EEF0F3"
         softness={0.75}
         intensity={0.25}

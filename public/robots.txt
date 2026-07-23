@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://barkatpackaging.example/sitemap.xml

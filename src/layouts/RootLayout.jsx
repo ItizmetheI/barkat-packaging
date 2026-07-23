@@ -18,8 +18,11 @@ export default function RootLayout({ cinematicRef }) {
 
   return (
     <>
+      <a href="#main-content" className="skip-link">
+        Skip to content
+      </a>
       <Header />
-      <main>
+      <main id="main-content">
         <Outlet context={cinematicRef} />
       </main>
       <SiteFooter />

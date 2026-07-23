@@ -80,6 +80,18 @@ export default function CertificationsSection() {
             </Reveal>
           ))}
         </div>
+
+        {/* TODO(Ahmed): confirm real recycled-content percentage and sourcing practices -
+            placeholder figures in the right shape, not verified claims. */}
+        <Reveal delay={0.2}>
+          <div style={{ marginTop: 48, borderTop: '1px solid var(--border)', paddingTop: 40, maxWidth: 720, marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>
+            <h3 style={{ fontSize: 18, fontWeight: 600, color: 'var(--ink)', margin: '0 0 10px' }}>Sourcing &amp; sustainability</h3>
+            <p style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--ink-soft)', margin: 0 }}>
+              Board runs on recycled and FSC-certified virgin fiber, and every box ships fully recyclable - no laminates or coatings
+              that keep it out of a standard paper stream.
+            </p>
+          </div>
+        </Reveal>
       </div>
     </section>
   )

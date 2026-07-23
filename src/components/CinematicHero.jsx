@@ -240,7 +240,7 @@ const CinematicHero = forwardRef(function CinematicHero(_props, ref) {
         >
           <div
             ref={(el) => (openingWordsRef.current[0] = el)}
-            style={{ fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.25em', color: '#C9A961', marginBottom: 18 }}
+            style={{ fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.25em', color: '#4A9EDE', marginBottom: 18 }}
           >
             BARKAT PACKAGING
           </div>
@@ -275,7 +275,7 @@ const CinematicHero = forwardRef(function CinematicHero(_props, ref) {
             style={{
               marginTop: 32,
               padding: '14px 32px',
-              background: '#C9A961',
+              background: '#4A9EDE',
               color: '#0A1628',
               fontWeight: 600,
               letterSpacing: '0.04em',
@@ -301,7 +301,7 @@ const CinematicHero = forwardRef(function CinematicHero(_props, ref) {
                   top: -10,
                   fontSize: 'clamp(38px, 5.4vw, 64px)',
                   fontWeight: 700,
-                  color: '#C9A961',
+                  color: '#4A9EDE',
                   margin: 0,
                   lineHeight: 1.15,
                   filter: 'blur(6px)',
@@ -312,7 +312,7 @@ const CinematicHero = forwardRef(function CinematicHero(_props, ref) {
                 {beat.title}
               </h1>
               <div ref={(el) => (elsRef.current[i] = el)} style={{ position: 'relative', opacity: 0 }}>
-                <div style={{ fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.2em', color: '#C9A961', marginBottom: 10 }}>
+                <div style={{ fontFamily: 'monospace', fontSize: 12, letterSpacing: '0.2em', color: '#4A9EDE', marginBottom: 10 }}>
                   {beat.label}
                 </div>
                 <h1
@@ -361,7 +361,7 @@ const CinematicHero = forwardRef(function CinematicHero(_props, ref) {
             <div
               key={beat.label}
               ref={(el) => (railElsRef.current[i] = el)}
-              style={{ width: 3, height: 22, background: '#C9A961', opacity: 0.35, transform: 'scaleY(0.5)', transition: 'opacity 0.2s' }}
+              style={{ width: 3, height: 22, background: '#4A9EDE', opacity: 0.35, transform: 'scaleY(0.5)', transition: 'opacity 0.2s' }}
             />
           ))}
         </div>

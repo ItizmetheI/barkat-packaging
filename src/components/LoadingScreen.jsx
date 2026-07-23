@@ -70,9 +70,9 @@ const LoadingScreen = forwardRef(function LoadingScreen({ onComplete }, ref) {
       }}
     >
       <svg width="140" height="140" viewBox="-70 -70 140 140" aria-hidden="true">
-        <polygon points={TOP_FACE} fill="#E4C77A" ref={(el) => (faceRefs.current[0] = el)} style={{ opacity: 0 }} />
-        <polygon points={LEFT_FACE} fill="#C9A961" ref={(el) => (faceRefs.current[1] = el)} style={{ opacity: 0 }} />
-        <polygon points={RIGHT_FACE} fill="#A6813F" ref={(el) => (faceRefs.current[2] = el)} style={{ opacity: 0 }} />
+        <polygon points={TOP_FACE} fill="#7FBEEA" ref={(el) => (faceRefs.current[0] = el)} style={{ opacity: 0 }} />
+        <polygon points={LEFT_FACE} fill="#4A9EDE" ref={(el) => (faceRefs.current[1] = el)} style={{ opacity: 0 }} />
+        <polygon points={RIGHT_FACE} fill="#2E6DA4" ref={(el) => (faceRefs.current[2] = el)} style={{ opacity: 0 }} />
         {INNER_LINES.map((d, i) => (
           <path key={d} d={d} stroke="#0A1628" strokeWidth="1.5" style={{ opacity: 0 }} ref={(el) => (innerRefs.current[i] = el)} />
         ))}

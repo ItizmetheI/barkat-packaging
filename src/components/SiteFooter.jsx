@@ -1,11 +1,5 @@
 import { Link } from 'react-router-dom'
-
-const LINKS = [
-  { label: 'Company', to: '/about' },
-  { label: 'Process', to: '/process' },
-  { label: 'Quality', to: '/about' },
-  { label: 'Contact', to: '/contact' },
-]
+import { NAV_LINKS } from '../config/nav'
 
 export default function SiteFooter() {
   return (
@@ -31,7 +25,7 @@ export default function SiteFooter() {
         <div>
           <div style={{ fontSize: 12, letterSpacing: '0.1em', color: 'rgba(247,248,250,0.45)', marginBottom: 14 }}>SITE</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {LINKS.map((link) => (
+            {NAV_LINKS.map((link) => (
               <Link key={link.label} to={link.to} style={{ fontSize: 14, color: 'rgba(247,248,250,0.75)', textDecoration: 'none' }}>
                 {link.label}
               </Link>
@@ -44,6 +38,9 @@ export default function SiteFooter() {
           {/* TODO: swap in Ahmed's real contact details once provided */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 14 }}>
             <span>sales@barkatpackaging.example</span>
+            <a href="tel:+15550000000" style={{ color: 'inherit', textDecoration: 'none' }}>
+              (555) 000-0000
+            </a>
             <span>Mon–Sat, 9am–6pm</span>
           </div>
         </div>

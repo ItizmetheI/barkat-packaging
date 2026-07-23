@@ -1,12 +1,7 @@
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { animate } from 'animejs'
-
-const LINKS = [
-  { label: 'Company', to: '/about' },
-  { label: 'Process', to: '/process' },
-  { label: 'Quality', to: '/about' },
-  { label: 'Contact', to: '/contact' },
-]
+import { NAV_LINKS } from '../config/nav'
 
 // Fixed (not sticky) so it floats over the top of the page on every route, including the
 // cinematic video on Home - that's what makes the video read as part of the site instead
@@ -15,6 +10,9 @@ const LINKS = [
 // Explicit height (var(--header-h)) instead of implicit padding-based height so every page's
 // top section can compensate with exact, non-guessed top padding.
 export default function Header() {
+  const { pathname } = useLocation()
+  const [mobileOpen, setMobileOpen] = useState(false)
+
   return (
     <header
       style={{
@@ -35,15 +33,34 @@ export default function Header() {
         borderBottom: '1px solid var(--border)',
       }}
     >
-      <Link to="/" style={{ fontSize: 15, fontWeight: 700, letterSpacing: '0.25em', color: 'var(--ink)', textDecoration: 'none' }}>
+      <Link
+        to="/"
+        onClick={() => setMobileOpen(false)}
+        style={{ fontSize: 15, fontWeight: 700, letterSpacing: '0.25em', color: 'var(--ink)', textDecoration: 'none' }}
+      >
         BARKAT
       </Link>
 
-      <nav style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-        {LINKS.map((link) => (
+      <button
+        type="button"
+        className="nav-toggle"
+        aria-expanded={mobileOpen}
+        aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+        onClick={() => setMobileOpen((v) => !v)}
+        style={{ background: 'none', border: 'none', padding: 8, cursor: 'pointer' }}
+      >
+        <svg width="22" height="16" viewBox="0 0 22 16" fill="none">
+          <path d="M0 1h22M0 8h22M0 15h22" stroke="var(--ink)" strokeWidth="2" />
+        </svg>
+      </button>
+
+      <nav aria-label="Main navigation" className={`nav-links${mobileOpen ? ' nav-links-open' : ''}`}>
+        {NAV_LINKS.map((link) => (
           <Link
             key={link.label}
             to={link.to}
+            aria-current={pathname === link.to ? 'page' : undefined}
+            onClick={() => setMobileOpen(false)}
             onMouseEnter={(e) => {
               animate(e.currentTarget, { color: '#0a1628', duration: 200, ease: 'outQuad' })
               animate(e.currentTarget.querySelector('.nav-underline'), { scaleX: 1, duration: 200, ease: 'outQuad' })
@@ -52,7 +69,14 @@ export default function Header() {
               animate(e.currentTarget, { color: 'rgba(10, 22, 40, 0.7)', duration: 200, ease: 'outQuad' })
               animate(e.currentTarget.querySelector('.nav-underline'), { scaleX: 0, duration: 200, ease: 'outQuad' })
             }}
-            style={{ position: 'relative', fontSize: 14, fontWeight: 500, color: 'var(--ink-soft)', textDecoration: 'none' }}
+            style={{
+              position: 'relative',
+              fontSize: 14,
+              fontWeight: 500,
+              color: 'var(--ink-soft)',
+              textDecoration: 'none',
+              padding: '6px 0',
+            }}
           >
             {link.label}
             <span
@@ -70,9 +94,16 @@ export default function Header() {
             />
           </Link>
         ))}
+
+        {/* TODO(Ahmed): real phone number */}
+        <a href="tel:+15550000000" style={{ fontSize: 14, color: 'var(--ink-soft)', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+          (555) 000-0000
+        </a>
+
         <Link
           to="/contact"
-          onMouseEnter={(e) => animate(e.currentTarget, { backgroundColor: '#b8933f', duration: 200, ease: 'outQuad' })}
+          onClick={() => setMobileOpen(false)}
+          onMouseEnter={(e) => animate(e.currentTarget, { backgroundColor: '#2e7bc4', duration: 200, ease: 'outQuad' })}
           onMouseLeave={(e) => animate(e.currentTarget, { backgroundColor: '#0a1628', duration: 200, ease: 'outQuad' })}
           style={{
             padding: '10px 20px',
