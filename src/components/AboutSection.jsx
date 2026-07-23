@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import Reveal from './Reveal'
 import useParallax from '../hooks/useParallax'
+import aboutBg from '../assets/generated/about-bg.jpg'
 
 // TODO: replace narrative below with Ahmed's real company history (founding story, milestones).
 // Kept deliberately generic/credible - no invented founding year or unverifiable claims.
@@ -27,26 +28,26 @@ export default function AboutSection() {
       id="about"
       style={{ padding: 'calc(var(--header-h) + 112px) 6% 112px', background: 'var(--bg-alt)', position: 'relative', overflow: 'hidden' }}
     >
-      <div
+      <img
         ref={bgRef}
+        src={aboutBg}
+        alt=""
         aria-hidden="true"
+        loading="lazy"
         style={{
           position: 'absolute',
-          top: '-10%',
-          right: '2%',
-          fontSize: 'clamp(280px, 34vw, 480px)',
-          fontWeight: 800,
-          lineHeight: 1,
-          color: 'var(--ink)',
-          opacity: 0.04,
-          letterSpacing: '-0.04em',
+          top: -50,
+          left: 0,
+          right: 0,
+          height: 'calc(100% + 100px)',
+          width: '100%',
+          objectFit: 'cover',
+          opacity: 0.16,
           zIndex: 0,
           pointerEvents: 'none',
-          userSelect: 'none',
         }}
-      >
-        01
-      </div>
+      />
+      <div style={{ position: 'absolute', inset: 0, background: 'var(--bg-alt)', opacity: 0.35, zIndex: 0, pointerEvents: 'none' }} />
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 56, alignItems: 'start' }}>
           <Reveal>

@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import Reveal from './Reveal'
 import useParallax from '../hooks/useParallax'
+import certsBg from '../assets/generated/certs-bg.jpg'
 
 // TODO(Ahmed): these are the certifications a corrugated packaging plant of this
 // scale would plausibly hold - NOT a verified list of Barkat's actual certifications.
@@ -33,24 +34,26 @@ export default function CertificationsSection() {
       id="quality"
       style={{ padding: '112px 6%', background: 'var(--bg)', position: 'relative', overflow: 'hidden' }}
     >
-      <div
+      <img
         ref={bgRef}
+        src={certsBg}
+        alt=""
         aria-hidden="true"
+        loading="lazy"
         style={{
           position: 'absolute',
-          top: '-8%',
+          top: -45,
           left: 0,
           right: 0,
-          margin: '0 auto',
-          width: 'min(70vw, 820px)',
-          height: 'min(70vw, 820px)',
-          border: '1px solid var(--accent)',
-          opacity: 0.08,
-          transform: 'rotate(45deg)',
+          height: 'calc(100% + 90px)',
+          width: '100%',
+          objectFit: 'cover',
+          opacity: 0.14,
           zIndex: 0,
           pointerEvents: 'none',
         }}
       />
+      <div style={{ position: 'absolute', inset: 0, background: 'var(--bg)', opacity: 0.4, zIndex: 0, pointerEvents: 'none' }} />
       <div style={{ maxWidth: 1400, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <h2
           style={{

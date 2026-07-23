@@ -8,6 +8,7 @@ import foldAssembly from '../assets/photos/fold-assembly.jpg'
 import warehouseDock from '../assets/photos/warehouse-dock.jpg'
 import Reveal from './Reveal'
 import useParallax from '../hooks/useParallax'
+import processBg from '../assets/generated/process-bg.jpg'
 
 // Bond through Dock used to be 3D chapters (Ch.3-8); moved here as a real-photo grid once
 // the 3D scroll was cut down to a cinematic Feed/Cut/Fold/Dock teaser. Same verbatim copy
@@ -62,23 +63,26 @@ export default function ProcessGallery() {
       id="process"
       style={{ padding: 'calc(var(--header-h) + 112px) 6% 112px', background: 'var(--bg)', position: 'relative', overflow: 'hidden' }}
     >
-      <div
+      <img
         ref={bgRef}
+        src={processBg}
+        alt=""
         aria-hidden="true"
+        loading="lazy"
         style={{
           position: 'absolute',
-          top: '10%',
+          top: -55,
           left: 0,
           right: 0,
-          margin: '0 auto',
-          width: 'min(90vw, 1100px)',
-          height: 'min(90vw, 1100px)',
-          background: 'radial-gradient(circle, var(--accent) 0%, transparent 70%)',
-          opacity: 0.06,
+          height: 'calc(100% + 110px)',
+          width: '100%',
+          objectFit: 'cover',
+          opacity: 0.13,
           zIndex: 0,
           pointerEvents: 'none',
         }}
       />
+      <div style={{ position: 'absolute', inset: 0, background: 'var(--bg)', opacity: 0.45, zIndex: 0, pointerEvents: 'none' }} />
       <div style={{ maxWidth: 1400, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <h2
           style={{
